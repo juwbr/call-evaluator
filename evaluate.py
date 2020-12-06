@@ -14,7 +14,8 @@ log = []
 for call in calls:
 	log.append([call.attributes['name'].value, datetime.strptime(call.attributes['time'].value[:10], '%d.%m.%Y'), call.attributes['time'].value[11:], int(call.attributes['dur'].value), int(call.attributes['type'].value)])
 
-def plotDurByDate(name):
+# Plotting the call duration by date. The parameter <name> allows you to plot calls for a specific contact on your phone [but is not necessary].
+def plotDurByDate(name = '#'):
 	date_list = []
 	dur_list = []
 	current_date = log[0][1]
@@ -46,8 +47,8 @@ def plotDurByDate(name):
 	# plt.plot_date(dts.date2num(date_list), dur_list, '.b')
 
 	ax = plt.subplot(111)
-	ax.bar(dts.date2num(date_list), dur_list, color='blue')
-	ax.bar(dts.date2num(date_list2), dur_list2, color='red')
+	ax.bar(dts.date2num(date_list), dur_list, color='red')
+	ax.bar(dts.date2num(date_list2), dur_list2, color='blue')
 	ax.xaxis_date()
 
 	plt.show()
