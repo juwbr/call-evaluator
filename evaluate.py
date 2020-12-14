@@ -13,6 +13,11 @@ log = []
 
 for call in calls:
 	log.append([call.attributes['name'].value, datetime.strptime(call.attributes['time'].value[:10], '%d.%m.%Y'), call.attributes['time'].value[11:], int(call.attributes['dur'].value), int(call.attributes['type'].value)])
+	# if str(log[-1][2]).startswith("06"):
+	#	print(log[-1])
+
+def map(value, start1, stop1, start2, stop2):
+	return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1))
 
 # Plotting the call duration by date. The parameter <name> allows you to plot calls for a specific contact on your phone [but is not necessary].
 def plotDurByDate(name = '#'):
@@ -54,4 +59,35 @@ def plotDurByDate(name = '#'):
 	plt.show()
 	plt.pause(10000)
 
-plotDurByDate('<NAME>')
+def plotAmountByTime(name = '#'):
+	time_list = []
+	times_list = []
+	n = -1
+	for entry in log:
+		if entry[0] == name:
+			hour = int(str(entry[2])[0:2]) * 100
+			minu = int(str(entry[2]).replace(':', '')[2:-2])
+
+			mapped = map(minu, 0, 59, 0, 99)
+			tmp = hour + mapped
+
+			# print(str(entry[2]), '->', str(hour) + ':' + str(minu), 'Mapped:', mapped, 'hour + mapped', tmp)
+
+			if tmp not in times_list:
+				times_list.append(tmp)
+				time_list.append(1)
+				n += 1
+			else:
+				for i in range(0, n):
+					if times_list[i] == tmp:
+						time_list[i] += 1
+	plt.style.use('dark_background')
+	times_list, time_list = zip(*sorted(zip(times_list, time_list)))
+	plt.plot(times_list, time_list, '-m')
+	# plt.scatter(times_list, time_list)
+	plt.show()
+	plt.pause(10000)
+
+
+# plotAmountByTime()
+plotDurByDate()
